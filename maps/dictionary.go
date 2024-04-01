@@ -47,8 +47,11 @@ func (d Dictionary) Update(word, definition string) error {
 
 	case nil:
 		d[word] = definition
-		return nil
+
+	default:
+		return err
 
 	}
+
 	return nil
 }
