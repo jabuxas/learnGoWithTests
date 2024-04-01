@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSearch(t *testing.T) {
 	dictionary := Dictionary{"test": "this is just a test"}
@@ -65,4 +67,28 @@ func assertError(t testing.TB, got, want error) {
 	if got != want {
 		t.Errorf("got error %q want %q", got, want)
 	}
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{word: definition}
+		newDefinition := "this is another test"
+
+		err := dictionary.Update(word, newDefinition)
+
+		assertDefinition(t, dictionary, word, newDefinition)
+		assertError(t, err, nil)
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+
+		dictionary := Dictionary{}
+
+		err := dictionary.Update(word, definition)
+		assertError(t, err, ErrWordDoesNotExists)
+	})
 }

@@ -1,15 +1,18 @@
 package main
 
-import (
-	"errors"
-)
-
 type Dictionary map[string]string
 
-var (
-	ErrNotFound   = errors.New("could not find the word you were looking for")
-	ErrWordExists = errors.New("the word is already in the dictionary")
+const (
+	ErrNotFound          = DictionaryErr("the word is not in the dictionary")
+	ErrWordExists        = DictionaryErr("the word is already in the dictionary")
+	ErrWordDoesNotExists = DictionaryErr("the word doesn't exists")
 )
+
+type DictionaryErr string
+
+func (e DictionaryErr) Error() string {
+	return string(e)
+}
 
 func (d Dictionary) Search(word string) (string, error) {
 	definition, ok := d[word]
@@ -32,6 +35,20 @@ func (d Dictionary) Add(key, value string) error {
 
 	default:
 		return err
+	}
+	return nil
+}
+
+func (d Dictionary) Update(word, definition string) error {
+	_, err := d.Search(word)
+	switch err {
+	case ErrNotFound:
+		return ErrWordDoesNotExists
+
+	case nil:
+		d[word] = definition
+		return nil
+
 	}
 	return nil
 }
