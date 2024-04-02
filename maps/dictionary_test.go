@@ -92,3 +92,10 @@ func TestUpdate(t *testing.T) {
 		assertError(t, err, ErrWordDoesNotExists)
 	})
 }
+
+func TestDelete(t *testing.T) {
+	word := "test"
+	dictionary := Dictionary{test: "this is just a test"}
+
+	dictionary.Delete(word)
+}
